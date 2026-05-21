@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+
+    <meta charset="UTF-8">
+
+    <title>Relatório</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="/static/style.css">
+
+</head>
+
+<body>
+
+<header>
+    Relatório Geral
+</header>
+
+<nav>
+    <a href="/admin">Voltar</a>
+    <a href="/deslogar">Sair</a>
+</nav>
+
+<div class="container">
+
+    <div class="card">
+
+        <h2>Gerar Relatório</h2>
+
+        <form method="POST">
+
+            <label>Mês:</label>
+
+            <input
+                type="month"
+                name="mes"
+                required
+            >
+
+            <button type="submit">
+                Gerar
+            </button>
+
+        </form>
+
+    </div>
+
+
+    {% for turma in relatorio_turmas %}
+
+    <div class="card">
+
+        <h2>
+            Turma: {{ turma.turma }}
+        </h2>
+
+        <div class="table-responsive">
+
+            <table>
+
+                <thead>
+
+                    <tr>
+                        <th>Criança</th>
+                        <th>Presenças</th>
+                        <th>Faltas</th>
+                        <th>Frequência</th>
+                        <th>Justificativas</th>
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                    {% for d in turma.dados %}
+
+                    <tr>
+
+                        <td>{{ d.nome }}</td>
+
+                        <td>{{ d.presencas }}</td>
+
+                        <td>{{ d.faltas }}</td>
+
+                        <td>{{ d.frequencia }}%</td>
+
+                        <td>{{ d.justificativas }}</td>
+
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+    {% endfor %}
+
+</div>
+
+</body>
+</html>

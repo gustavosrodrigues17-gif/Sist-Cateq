@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Editar Turma</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+
+<body>
+
+<header>
+    Editar Turma
+</header>
+
+<nav>
+    <a href="/admin">Voltar</a>
+</nav>
+
+<div class="container">
+
+    <div class="card">
+
+        <h2>Editar Dados da Turma</h2>
+
+        <form method="POST">
+
+            <input
+                type="text"
+                name="nome"
+                value="{{turma[1]}}"
+                placeholder="Nome da Turma"
+                required
+            >
+
+            <label>
+                Catequistas da Turma:
+            </label>
+
+            <select
+                name="catequista_id"
+                multiple
+                required
+                style="height: 200px;"
+            >
+
+                {% for c in catequistas %}
+
+                <option
+                    value="{{c[0]}}"
+
+                    {% if c[0] in selecionados %}
+                        selected
+                    {% endif %}
+                >
+
+                    {{c[1]}}
+
+                </option>
+
+                {% endfor %}
+
+            </select>
+
+            <button type="submit">
+                Salvar Alterações
+            </button>
+
+        </form>
+
+    </div>
+
+</div>
+
+</body>
+</html>

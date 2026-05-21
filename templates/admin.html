@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Administrador</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="/static/style.css">
+
+    <style>
+
+        .acoes {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .icone {
+            text-decoration: none;
+            font-size: 22px;
+        }
+
+        .icone:hover {
+            transform: scale(1.2);
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<header>
+    Painel do Administrador
+</header>
+
+<nav>
+    <a href="/admin">Home</a>
+    <a href="/relatorio">Relatório</a>
+    <a href="/deslogar">Sair</a>
+</nav>
+
+<div class="container">
+
+    <!-- CADASTRAR CATEQUISTA -->
+    <div class="card">
+
+        <h2>Cadastrar Catequista</h2>
+
+        <form action="/cadastrar_catequista" method="POST">
+
+            <input
+                type="text"
+                name="nome"
+                placeholder="Nome"
+                required
+            >
+
+            <input
+                type="email"
+                name="email"
+                placeholder="Email"
+                required
+            >
+
+            <input
+                type="password"
+                name="senha"
+                placeholder="Senha"
+                required
+            >
+
+            <button type="submit">
+                Cadastrar
+            </button>
+
+        </form>
+
+    </div>
+
+
+    <!-- LISTA CATEQUISTAS -->
+    <div class="card">
+
+        <h2>Catequistas Cadastrados</h2>
+
+        <div class="table-responsive">
+
+            <table>
+
+                <thead>
+
+                    <tr>
+                        <th>Nome</th>
+                        <th>Email</th>
+                        <th>Ações</th>
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                    {% for c in catequistas %}
+
+                    <tr>
+
+                        <td>{{c[1]}}</td>
+                        <td>{{c[2]}}</td>
+
+                        <td>
+
+                            <div class="acoes">
+
+                                <a
+                                    class="icone"
+                                    href="/editar_catequista/{{c[0]}}"
+                                >
+                                    ✏️
+                                </a>
+
+                                <a
+                                    class="icone"
+                                    href="/excluir_catequista/{{c[0]}}"
+                                    onclick="return confirm('Deseja excluir este catequista?')"
+                                >
+                                    ❌
+                                </a>
+
+                            </div>
+
+                        </td>
+
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+
+    <!-- CADASTRAR TURMA -->
+    <div class="card">
+
+        <h2>Cadastrar Turma</h2>
+
+        <form action="/cadastrar_turma" method="POST">
+
+            <input
+                type="text"
+                name="nome"
+                placeholder="Nome da Turma"
+                required
+            >
+
+            <select name="catequista_id" multiple required>
+
+                {% for c in catequistas %}
+
+                <option value="{{c[0]}}">
+                    {{c[1]}}
+                </option>
+
+                {% endfor %}
+
+            </select>
+
+            <button type="submit">
+                Cadastrar
+            </button>
+
+        </form>
+
+    </div>
+
+
+    <!-- LISTA TURMAS -->
+    <div class="card">
+
+        <h2>Turmas Cadastradas</h2>
+
+        <div class="table-responsive">
+
+            <table>
+
+                <thead>
+
+                    <tr>
+                        <th>Turma</th>
+                        <th>Ações</th>
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                    {% for t in turmas %}
+
+                    <tr>
+
+                        <td>{{t[1]}}</td>
+
+                        <td>
+
+                            <div class="acoes">
+
+                                <!-- VISUALIZAR -->
+                                <a
+                                    class="icone"
+                                    href="/visualizar_turma/{{t[0]}}"
+                                >
+                                    👁️
+                                </a>
+
+                                <!-- EDITAR -->
+                                <a
+                                    class="icone"
+                                    href="/editar_turma/{{t[0]}}"
+                                >
+                                    ✏️
+                                </a>
+
+                                <!-- EXCLUIR -->
+                                <a
+                                    class="icone"
+                                    href="/excluir_turma/{{t[0]}}"
+                                    onclick="return confirm('Deseja excluir esta turma?')"
+                                >
+                                    ❌
+                                </a>
+
+                            </div>
+
+                        </td>
+
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+
+    <!-- CADASTRAR CRIANÇA -->
+    <div class="card">
+
+        <h2>Cadastrar Criança</h2>
+
+        <form action="/cadastrar_crianca" method="POST">
+
+            <input
+                type="text"
+                name="nome"
+                placeholder="Nome da Criança"
+                required
+            >
+
+            <select name="turma_id" required>
+
+                {% for t in turmas %}
+
+                <option value="{{t[0]}}">
+                    {{t[1]}}
+                </option>
+
+                {% endfor %}
+
+            </select>
+
+            <button type="submit">
+                Cadastrar
+            </button>
+
+        </form>
+
+    </div>
+
+
+    <!-- LISTA CRIANÇAS -->
+    <div class="card">
+
+        <h2>Crianças Cadastradas</h2>
+
+        <div class="table-responsive">
+
+            <table>
+
+                <thead>
+
+                    <tr>
+                        <th>Nome</th>
+                        <th>Ações</th>
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                    {% for c in criancas %}
+
+                    <tr>
+
+                        <td>{{c[1]}}</td>
+
+                        <td>
+
+                            <div class="acoes">
+
+                                <a
+                                    class="icone"
+                                    href="/editar_crianca/{{c[0]}}"
+                                >
+                                    ✏️
+                                </a>
+
+                                <a
+                                    class="icone"
+                                    href="/excluir_crianca/{{c[0]}}"
+                                    onclick="return confirm('Tem certeza que deseja excluir?')"
+                                >
+                                    ❌
+                                </a>
+
+                            </div>
+
+                        </td>
+
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
+
+</body>
+</html>

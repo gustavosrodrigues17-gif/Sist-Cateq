@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <title>Área da Catequista</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="/static/style.css">
+
+    <script>
+
+        function mostrarJustificativa(id){
+
+            let falta = document.getElementById("falta_" + id)
+            let campo = document.getElementById("just_" + id)
+
+            if(falta.checked){
+
+                campo.style.display = "block"
+
+            }else{
+
+                campo.style.display = "none"
+
+            }
+        }
+
+    </script>
+
+</head>
+
+<body>
+
+<header>
+    Área da Catequista
+</header>
+
+<nav>
+
+    <a href="/configuracoes">
+        Configurações
+    </a>
+
+    <a href="/deslogar">
+        Sair
+    </a>
+
+</nav>
+
+<div class="container">
+
+    <div class="card">
+
+        <h2>
+            Catequista: {{ catequista_nome }}
+        </h2>
+
+        <form method="GET" action="/catequista">
+
+            <label>
+                Selecionar Turma:
+            </label>
+
+            <select
+                name="turma"
+                onchange="this.form.submit()"
+                required
+            >
+
+                <option value="">
+                    Escolha uma turma
+                </option>
+
+                {% for t in turmas %}
+
+                <option
+                    value="{{t[0]}}"
+
+                    {% if turma_selecionada == t[0]|string %}
+                        selected
+                    {% endif %}
+                >
+
+                    {{t[1]}}
+
+                </option>
+
+                {% endfor %}
+
+            </select>
+
+        </form>
+
+    </div>
+
+
+    {% if criancas %}
+
+    <div class="card">
+
+        <h2>
+            Registrar Chamada
+        </h2>
+
+        <form action="/registrar_presenca" method="POST">
+
+            <input
+                type="hidden"
+                name="turma_id"
+                value="{{turma_selecionada}}"
+            >
+
+            <label>
+                Data da Aula:
+            </label>
+
+            <input
+                type="date"
+                name="data"
+                required
+            >
+
+            <div class="table-responsive">
+
+                <table>
+
+                    <thead>
+
+                        <tr>
+
+                            <th>Nome</th>
+                            <th>Status</th>
+                            <th>Justificativa</th>
+
+                        </tr>
+
+                    </thead>
+
+                    <tbody>
+
+                        {% for c in criancas %}
+
+                        <tr>
+
+                            <td class="nome-crianca">
+                                {{ c.nome }}
+                            </td>
+
+                            <td>
+
+                                <div class="presenca-box">
+
+                                    <!-- PRESENTE -->
+                                    <label class="opcao">
+
+                                        <input
+                                            type="radio"
+                                            name="status_{{c.id}}"
+                                            value="Presente"
+                                            onclick="mostrarJustificativa('{{c.id}}')"
+                                            required
+                                        >
+
+                                        <span class="botao-status presente">
+                                            ✅ Presente
+                                        </span>
+
+                                    </label>
+
+                                    <!-- FALTA -->
+                                    <label class="opcao">
+
+                                        <input
+                                            type="radio"
+                                            id="falta_{{c.id}}"
+                                            name="status_{{c.id}}"
+                                            value="Falta"
+                                            onclick="mostrarJustificativa('{{c.id}}')"
+                                        >
+
+                                        <span class="botao-status falta">
+                                            ❌ Falta
+                                        </span>
+
+                                    </label>
+
+                                </div>
+
+                            </td>
+
+                            <td>
+
+                                <input
+                                    type="text"
+                                    id="just_{{c.id}}"
+                                    name="justificativa_{{c.id}}"
+                                    placeholder="Motivo da falta..."
+                                    class="justificativa"
+                                    style="display:none;"
+                                >
+
+                            </td>
+
+                        </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+            <br>
+
+            <button type="submit">
+                Salvar Chamada
+            </button>
+
+        </form>
+
+    </div>
+
+    {% endif %}
+
+</div>
+
+</body>
+</html>

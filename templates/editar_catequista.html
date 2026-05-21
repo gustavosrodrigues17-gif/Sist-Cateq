@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Editar Catequista</title>
+
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+<header>
+    Editar Catequista
+</header>
+
+<div class="container">
+
+    <div class="card">
+
+        <form method="POST">
+
+            <input
+                type="text"
+                name="nome"
+                value="{{catequista[1]}}"
+                required
+            >
+
+            <input
+                type="email"
+                name="email"
+                value="{{catequista[2]}}"
+                required
+            >
+
+            <input
+                type="text"
+                name="senha"
+                value="{{catequista[3]}}"
+                required
+            >
+
+            <button type="submit">
+                Salvar
+            </button>
+
+        </form>
+
+    </div>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+
+    <meta charset="UTF-8">
+
+    <title>Configurações</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="/static/style.css">
+
+</head>
+
+<body>
+
+<header>
+    Configurações
+</header>
+
+<nav>
+    <a href="/catequista">Voltar</a>
+    <a href="/deslogar">Sair</a>
+</nav>
+
+<div class="container">
+
+    <div class="card">
+
+        <h2>Alterar Dados</h2>
+
+        <form method="POST">
+
+            <input
+                type="email"
+                name="email"
+                value="{{usuario[1]}}"
+                required
+            >
+
+            <input
+                type="password"
+                name="senha"
+                placeholder="Nova senha"
+                required
+            >
+
+            <button type="submit">
+                Salvar
+            </button>
+
+        </form>
+
+    </div>
+
+</div>
+
+</body>
+</html>

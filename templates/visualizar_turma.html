@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Visualizar Turma</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+
+<body>
+
+<header>
+    Turma {{turma[0]}}
+</header>
+
+<nav>
+    <a href="/admin">Voltar</a>
+</nav>
+
+<div class="container">
+
+    <!-- CATEQUISTAS -->
+    <div class="card">
+
+        <h2>Catequistas da Turma</h2>
+
+        <ul>
+
+            {% for c in catequistas %}
+
+            <li>
+                {{c[0]}}
+            </li>
+
+            {% endfor %}
+
+        </ul>
+
+    </div>
+
+
+    <!-- CRIANÇAS -->
+    <div class="card">
+
+        <h2>Crianças da Turma</h2>
+
+        <ul>
+
+            {% for c in criancas %}
+
+            <li>
+                {{c[0]}}
+            </li>
+
+            {% endfor %}
+
+        </ul>
+
+    </div>
+
+</div>
+
+</body>
+</html>
