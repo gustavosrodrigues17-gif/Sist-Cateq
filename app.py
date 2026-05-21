@@ -20,7 +20,7 @@ def criar_admin():
         cursor.execute("""
             INSERT INTO usuario (nome,email,senha,tipo)
             VALUES (%s,%s,%s,%s)
-        """, ('Admin', 'admin@gmail.com', '123', 'admin'))
+        """, ('Admin', 'admin@gmail.com', 'ResponsaveisCatequese123', 'admin'))
 
     conn.commit()
     conn.close()
