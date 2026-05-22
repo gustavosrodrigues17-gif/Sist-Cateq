@@ -98,6 +98,15 @@ def admin():
     conn = conectar()
     cursor = conn.cursor()
 
+    # ADMINS
+    cursor.execute("""
+        SELECT id, nome, email
+        FROM usuario
+        WHERE tipo='admin'
+        ORDER BY nome
+    """)
+    admins = cursor.fetchall()
+
     # CATEQUISTAS
     cursor.execute("""
         SELECT id, nome, email
@@ -120,24 +129,15 @@ def admin():
     """)
     criancas = cursor.fetchall()
 
-    cursor.execute("""
-        SELECT id, nome, email
-        FROM usuario
-        WHERE tipo='admin'
-        ORDER BY nome
-    """)
-    
-    admins = cursor.fetchall()
     conn.close()
 
-return render_template(
-    'admin.html',
-    catequistas=catequistas,
-    turmas=turmas,
-    criancas=criancas,
-    admins=admins
-)
-
+    return render_template(
+        'admin.html',
+        admins=admins,
+        catequistas=catequistas,
+        turmas=turmas,
+        criancas=criancas
+    )
 
 # ➕ CADASTRAR CATEQUISTA
 @app.route('/cadastrar_catequista', methods=['POST'])
