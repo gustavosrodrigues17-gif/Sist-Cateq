@@ -45,6 +45,102 @@
 
 <div class="container">
 
+
+    <!-- ADMINS ATIVOS -->
+    <div class="card">
+
+        <h2>Admins Ativos</h2>
+
+        <form action="/novo_admin" method="POST">
+
+            <input
+                type="text"
+                name="nome"
+                placeholder="Nome do Admin"
+                required
+            >
+
+            <input
+                type="email"
+                name="email"
+                placeholder="Email"
+                required
+            >
+
+            <input
+                type="password"
+                name="senha"
+                placeholder="Senha"
+                required
+            >
+
+            <button type="submit">
+                ➕ Adicionar Admin
+            </button>
+
+        </form>
+
+        <br>
+
+        <div class="table-responsive">
+
+            <table>
+
+                <thead>
+
+                    <tr>
+                        <th>Nome</th>
+                        <th>Email</th>
+                        <th>Ações</th>
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                    {% for a in admins %}
+
+                    <tr>
+
+                        <td>{{a[1]}}</td>
+                        <td>{{a[2]}}</td>
+
+                        <td>
+
+                            <div class="acoes">
+
+                                <a
+                                    class="icone"
+                                    href="/editar_admin/{{a[0]}}"
+                                >
+                                    ✏️
+                                </a>
+
+                                <a
+                                    class="icone"
+                                    href="/excluir_admin/{{a[0]}}"
+                                    onclick="return confirm('Deseja excluir este admin?')"
+                                >
+                                    ❌
+                                </a>
+
+                            </div>
+
+                        </td>
+
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+
     <!-- CADASTRAR CATEQUISTA -->
     <div class="card">
 
@@ -211,7 +307,6 @@
 
                             <div class="acoes">
 
-                                <!-- VISUALIZAR -->
                                 <a
                                     class="icone"
                                     href="/visualizar_turma/{{t[0]}}"
@@ -219,7 +314,6 @@
                                     👁️
                                 </a>
 
-                                <!-- EDITAR -->
                                 <a
                                     class="icone"
                                     href="/editar_turma/{{t[0]}}"
@@ -227,7 +321,6 @@
                                     ✏️
                                 </a>
 
-                                <!-- EXCLUIR -->
                                 <a
                                     class="icone"
                                     href="/excluir_turma/{{t[0]}}"
