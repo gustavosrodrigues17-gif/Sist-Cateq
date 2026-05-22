@@ -120,14 +120,23 @@ def admin():
     """)
     criancas = cursor.fetchall()
 
+    cursor.execute("""
+        SELECT id, nome, email
+        FROM usuario
+        WHERE tipo='admin'
+        ORDER BY nome
+    """)
+    
+    admins = cursor.fetchall()
     conn.close()
 
-    return render_template(
-        'admin.html',
-        catequistas=catequistas,
-        turmas=turmas,
-        criancas=criancas
-    )
+return render_template(
+    'admin.html',
+    catequistas=catequistas,
+    turmas=turmas,
+    criancas=criancas,
+    admins=admins
+)
 
 
 # ➕ CADASTRAR CATEQUISTA
@@ -792,6 +801,109 @@ def visualizar_turma(id):
         criancas=criancas
     )
 
+# =========================
+# COLE NO FINAL DO app.py
+# ANTES DO if __name__ == '__main__':
+# =========================
+
+
+# ➕ NOVO ADMIN
+@app.route('/novo_admin', methods=['POST'])
+def novo_admin():
+
+    if session.get("tipo") != "admin":
+        return redirect('/login')
+
+    conn = conectar()
+    cursor = conn.cursor()
+
+    cursor.execute("""
+        INSERT INTO usuario (nome,email,senha,tipo)
+        VALUES (%s,%s,%s,'admin')
+    """, (
+        request.form['nome'],
+        request.form['email'],
+        request.form['senha']
+    ))
+
+    conn.commit()
+    conn.close()
+
+    return redirect('/admin')
+
+
+# ✏️ EDITAR ADMIN
+@app.route('/editar_admin/<int:id>', methods=['GET', 'POST'])
+def editar_admin(id):
+
+    if session.get("tipo") != "admin":
+        return redirect('/login')
+
+    conn = conectar()
+    cursor = conn.cursor()
+
+    if request.method == 'POST':
+
+        cursor.execute("""
+            UPDATE usuario
+            SET nome=%s,
+                email=%s,
+                senha=%s
+            WHERE id=%s
+        """, (
+            request.form['nome'],
+            request.form['email'],
+            request.form['senha'],
+            id
+        ))
+
+        conn.commit()
+        conn.close()
+
+        return redirect('/admin')
+
+    cursor.execute("""
+        SELECT id, nome, email, senha
+        FROM usuario
+        WHERE id=%s
+    """, (id,))
+
+    admin = cursor.fetchone()
+
+    conn.close()
+
+    return render_template(
+        'editar_admin.html',
+        admin=admin
+    )
+
+
+# ❌ EXCLUIR ADMIN
+@app.route('/excluir_admin/<int:id>')
+def excluir_admin(id):
+
+    if session.get("tipo") != "admin":
+        return redirect('/login')
+
+    # NÃO DEIXA APAGAR A SI MESMO
+    if id == session['usuario_id']:
+
+        flash("Você não pode excluir seu próprio usuário.")
+        return redirect('/admin')
+
+    conn = conectar()
+    cursor = conn.cursor()
+
+    cursor.execute("""
+        DELETE FROM usuario
+        WHERE id=%s
+        AND tipo='admin'
+    """, (id,))
+
+    conn.commit()
+    conn.close()
+
+    return redirect('/admin')
 
 if __name__ == '__main__':
     app.run(debug=True)
