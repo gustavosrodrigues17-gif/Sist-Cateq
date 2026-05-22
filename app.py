@@ -842,6 +842,7 @@ def editar_admin(id):
     conn = conectar()
     cursor = conn.cursor()
 
+    # SALVAR ALTERAÇÕES
     if request.method == 'POST':
 
         cursor.execute("""
@@ -850,6 +851,7 @@ def editar_admin(id):
                 email=%s,
                 senha=%s
             WHERE id=%s
+            AND tipo='admin'
         """, (
             request.form['nome'],
             request.form['email'],
@@ -862,13 +864,22 @@ def editar_admin(id):
 
         return redirect('/admin')
 
+    # BUSCAR ADMIN
     cursor.execute("""
         SELECT id, nome, email, senha
         FROM usuario
         WHERE id=%s
+        AND tipo='admin'
     """, (id,))
 
     admin = cursor.fetchone()
+
+    # SE NÃO EXISTIR
+    if not admin:
+
+        conn.close()
+        flash("Admin não encontrado.")
+        return redirect('/admin')
 
     conn.close()
 
