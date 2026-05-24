@@ -386,68 +386,147 @@
     </div>
 
 
-    <!-- LISTA CRIANÇAS -->
-    <div class="card">
+<!-- LISTA CRIANÇAS -->
+<div class="card">
 
-        <h2>Crianças Cadastradas</h2>
+    <h2>Crianças Cadastradas</h2>
 
-        <div class="table-responsive">
+    <!-- FILTROS -->
+    <div class="filtros">
 
-            <table>
+        <input
+            type="text"
+            id="buscarNome"
+            placeholder="🔎 Buscar por nome..."
+        >
 
-                <thead>
+        <input
+            type="text"
+            id="buscarTurma"
+            placeholder="👥 Buscar por turma..."
+        >
 
-                    <tr>
-                        <th>Nome</th>
-                        <th>Ações</th>
-                    </tr>
+    </div>
 
-                </thead>
+    <div class="table-responsive">
 
-                <tbody>
+        <table>
 
-                    {% for c in criancas %}
+            <thead>
 
-                    <tr>
+                <tr>
+                    <th>Nome</th>
+                    <th>Turma</th>
+                    <th>Ações</th>
+                </tr>
 
-                        <td>{{c[1]}}</td>
+            </thead>
 
-                        <td>
+            <tbody id="tabelaCriancas">
 
-                            <div class="acoes">
+                {% for c in criancas %}
 
-                                <a
-                                    class="icone"
-                                    href="/editar_crianca/{{c[0]}}"
-                                >
-                                    ✏️
-                                </a>
+                <tr>
 
-                                <a
-                                    class="icone"
-                                    href="/excluir_crianca/{{c[0]}}"
-                                    onclick="return confirm('Tem certeza que deseja excluir?')"
-                                >
-                                    ❌
-                                </a>
+                    <td class="col-nome">
+                        {{c[1]}}
+                    </td>
 
-                            </div>
+                    <td class="col-turma">
+                        {{c[2]}}
+                    </td>
 
-                        </td>
+                    <td>
 
-                    </tr>
+                        <div class="acoes">
 
-                    {% endfor %}
+                            <a
+                                class="icone"
+                                href="/editar_crianca/{{c[0]}}"
+                            >
+                                ✏️
+                            </a>
 
-                </tbody>
+                            <a
+                                class="icone"
+                                href="/excluir_crianca/{{c[0]}}"
+                                onclick="return confirm('Tem certeza que deseja excluir?')"
+                            >
+                                ❌
+                            </a>
 
-            </table>
+                        </div>
 
-        </div>
+                    </td>
+
+                </tr>
+
+                {% endfor %}
+
+            </tbody>
+
+        </table>
 
     </div>
 
 </div>
 
+
+<script>
+
+function filtrarCriancas(){
+
+    let nome = document
+        .getElementById("buscarNome")
+        .value
+        .toLowerCase()
+
+    let turma = document
+        .getElementById("buscarTurma")
+        .value
+        .toLowerCase()
+
+    let linhas = document.querySelectorAll("#tabelaCriancas tr")
+
+    linhas.forEach(function(linha){
+
+        let nomeCrianca = linha
+            .querySelector(".col-nome")
+            .innerText
+            .toLowerCase()
+
+        let turmaCrianca = linha
+            .querySelector(".col-turma")
+            .innerText
+            .toLowerCase()
+
+        let mostrarNome = nomeCrianca.includes(nome)
+
+        let mostrarTurma = turmaCrianca.includes(turma)
+
+        if(mostrarNome && mostrarTurma){
+
+            linha.style.display = ""
+
+        }else{
+
+            linha.style.display = "none"
+
+        }
+
+    })
+
+}
+
+document
+    .getElementById("buscarNome")
+    .addEventListener("keyup", filtrarCriancas)
+
+document
+    .getElementById("buscarTurma")
+    .addEventListener("keyup", filtrarCriancas)
+
+</script>
+    
 </body>
 </html>
