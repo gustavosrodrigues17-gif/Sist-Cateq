@@ -124,9 +124,21 @@ def admin():
 
     # CRIANÇAS
     cursor.execute("""
-        SELECT id, nome, turma_id
+
+        SELECT
+            crianca.id,
+            crianca.nome,
+            turma.nome
+
         FROM crianca
+
+        JOIN turma
+        ON crianca.turma_id = turma.id
+
+        ORDER BY crianca.nome
+
     """)
+
     criancas = cursor.fetchall()
 
     conn.close()
@@ -138,7 +150,6 @@ def admin():
         turmas=turmas,
         criancas=criancas
     )
-
 # ➕ CADASTRAR CATEQUISTA
 @app.route('/cadastrar_catequista', methods=['POST'])
 def cadastrar_catequista():
