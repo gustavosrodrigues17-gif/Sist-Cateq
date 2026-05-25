@@ -351,20 +351,6 @@ input[type="text"]#justificativa{
         flex-direction:column;
     }
 
-   <div style="
-    background: white;
-    padding: 12px;
-    border-radius: 12px;
-    margin: 15px auto;
-    width: fit-content;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-    font-size: 17px;
-">
-
-    👤 Logado como:
-    <strong>{{ session['usuario_nome'] }}</strong>
-
-</div>
 
     .botao-status{
         width:100%;
