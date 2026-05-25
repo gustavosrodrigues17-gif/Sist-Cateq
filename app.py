@@ -112,6 +112,7 @@ def admin():
         SELECT id, nome, email
         FROM usuario
         WHERE tipo='catequista'
+        ORDER BY nome
     """)
     catequistas = cursor.fetchall()
 
@@ -119,6 +120,7 @@ def admin():
     cursor.execute("""
         SELECT id, nome
         FROM turma
+        ORDER BY nome
     """)
     turmas = cursor.fetchall()
 
@@ -141,6 +143,39 @@ def admin():
 
     criancas = cursor.fetchall()
 
+    # =========================
+    # DASHBOARD
+    # =========================
+
+    total_criancas = len(criancas)
+    total_turmas = len(turmas)
+    total_catequistas = len(catequistas)
+
+    # RANKING DE TURMAS
+    cursor.execute("""
+
+        SELECT
+            turma.nome,
+            COUNT(crianca.id) as total
+
+        FROM turma
+
+        LEFT JOIN crianca
+        ON turma.id = crianca.turma_id
+
+        GROUP BY turma.nome
+
+        ORDER BY total DESC
+
+    """)
+
+    ranking_turmas = cursor.fetchall()
+
+    turma_maior = None
+
+    if ranking_turmas:
+        turma_maior = ranking_turmas[0]
+
     conn.close()
 
     return render_template(
@@ -148,7 +183,12 @@ def admin():
         admins=admins,
         catequistas=catequistas,
         turmas=turmas,
-        criancas=criancas
+        criancas=criancas,
+        total_criancas=total_criancas,
+        total_turmas=total_turmas,
+        total_catequistas=total_catequistas,
+        ranking_turmas=ranking_turmas,
+        turma_maior=turma_maior
     )
 # ➕ CADASTRAR CATEQUISTA
 @app.route('/cadastrar_catequista', methods=['POST'])
