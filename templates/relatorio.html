@@ -48,6 +48,47 @@
         </form>
 
     </div>
+    {% if alertas %}
+
+<div class="card">
+
+    <h2>⚠️ Alertas de Frequência</h2>
+
+    {% for alerta in alertas %}
+
+    <div style="
+        background:#fff3cd;
+        color:#856404;
+        padding:15px;
+        border-radius:12px;
+        margin-bottom:15px;
+        border-left:6px solid #f1c40f;
+    ">
+
+        <strong>{{ alerta.nome }}</strong>
+
+        <br>
+
+        Turma:
+        {{ alerta.turma }}
+
+        <br>
+
+        Frequência:
+        {{ alerta.frequencia }}%
+
+        <br>
+
+        Faltas:
+        {{ alerta.faltas }}
+
+    </div>
+
+    {% endfor %}
+
+</div>
+
+{% endif %}
 
 
     <!-- RELATÓRIOS DAS TURMAS -->
