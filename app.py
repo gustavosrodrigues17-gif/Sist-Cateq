@@ -430,6 +430,7 @@ def relatorio():
     cursor = conn.cursor()
 
     relatorio_turmas = []
+    grafico_faltas = []
 
     if request.method == 'POST':
 
@@ -507,11 +508,36 @@ def relatorio():
                 "dados": dados_criancas
             })
 
+        # =========================
+        # GRÁFICO DE FALTAS
+        # =========================
+
+        for turma in relatorio_turmas:
+
+            total_faltas = 0
+
+            for aluno in turma["dados"]:
+
+                total_faltas += aluno["faltas"]
+
+            grafico_faltas.append({
+                "turma": turma["turma"],
+                "faltas": total_faltas
+            })
+
+        # ORDENA DA MAIOR PRA MENOR
+        grafico_faltas = sorted(
+            grafico_faltas,
+            key=lambda x: x["faltas"],
+            reverse=True
+        )
+
     conn.close()
 
     return render_template(
         'relatorio.html',
-        relatorio_turmas=relatorio_turmas
+        relatorio_turmas=relatorio_turmas,
+        grafico_faltas=grafico_faltas
     )
 
 
