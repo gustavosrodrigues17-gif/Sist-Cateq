@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
 
     <meta charset="UTF-8">
@@ -25,6 +26,7 @@
 
 <div class="container">
 
+    <!-- GERAR RELATÓRIO -->
     <div class="card">
 
         <h2>Gerar Relatório</h2>
@@ -48,6 +50,7 @@
     </div>
 
 
+    <!-- RELATÓRIOS DAS TURMAS -->
     {% for turma in relatorio_turmas %}
 
     <div class="card">
@@ -101,6 +104,64 @@
     </div>
 
     {% endfor %}
+
+
+    <!-- GRÁFICO -->
+    {% if grafico_faltas %}
+
+    <div class="card">
+
+        <h2>📊 Ranking de Faltas por Turma</h2>
+
+        {% for g in grafico_faltas %}
+
+        <div style="margin-bottom:20px;">
+
+            <div style="
+                display:flex;
+                justify-content:space-between;
+                margin-bottom:6px;
+                font-weight:bold;
+            ">
+
+                <span>{{ g.turma }}</span>
+
+                <span>{{ g.faltas }} faltas</span>
+
+            </div>
+
+            <div style="
+                background:#ecf0f1;
+                border-radius:12px;
+                overflow:hidden;
+                height:35px;
+            ">
+
+                <div style="
+                    width:{{ g.faltas * 10 }}px;
+                    max-width:100%;
+                    height:35px;
+                    background:linear-gradient(135deg,#e74c3c,#ff7675);
+                    border-radius:12px;
+                    display:flex;
+                    align-items:center;
+                    padding-left:12px;
+                    color:white;
+                    font-weight:bold;
+                    transition:0.3s;
+                ">
+
+                </div>
+
+            </div>
+
+        </div>
+
+        {% endfor %}
+
+    </div>
+
+    {% endif %}
 
 </div>
 
