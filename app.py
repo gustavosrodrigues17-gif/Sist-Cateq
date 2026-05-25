@@ -425,11 +425,13 @@ def registrar_presenca():
     if not turma:
         return redirect('/catequista')
 
+    turma_id = turma[0]
+
     cursor.execute("""
         SELECT id
         FROM crianca
         WHERE turma_id=%s
-    """, (turma[0],))
+    """, (turma_id,))
 
     criancas = cursor.fetchall()
 
@@ -442,6 +444,26 @@ def registrar_presenca():
 
         if status:
 
+            # VERIFICA SE JÁ EXISTE PRESENÇA NESSE DIA
+            cursor.execute("""
+
+                SELECT id
+                FROM presenca
+                WHERE crianca_id=%s
+                AND data=%s
+
+            """, (
+                crianca_id,
+                data
+            ))
+
+            presenca_existente = cursor.fetchone()
+
+            # SE JÁ EXISTIR IGNORA
+            if presenca_existente:
+                continue
+
+            # SALVA PRESENÇA
             cursor.execute("""
                 INSERT INTO presenca
                 (crianca_id,data,status,justificativa)
@@ -457,8 +479,6 @@ def registrar_presenca():
     conn.close()
 
     return redirect('/catequista')
-
-
 # 📊 RELATÓRIO
 @app.route('/relatorio', methods=['GET', 'POST'])
 def relatorio():
