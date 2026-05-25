@@ -431,6 +431,7 @@ def relatorio():
 
     relatorio_turmas = []
     grafico_faltas = []
+    alertas = []
 
     if request.method == 'POST':
 
@@ -493,6 +494,16 @@ def relatorio():
                     1
                 ) if total > 0 else 0
 
+                # ALERTA DE BAIXA FREQUÊNCIA
+                if freq < 50 and total > 0:
+                
+                    alertas.append({
+                        "nome": c[1],
+                        "turma": turma_nome,
+                        "frequencia": freq,
+                        "faltas": faltas
+                    })
+
                 dados_criancas.append({
                     "nome": c[1],
                     "presencas": presencas,
@@ -537,7 +548,8 @@ def relatorio():
     return render_template(
         'relatorio.html',
         relatorio_turmas=relatorio_turmas,
-        grafico_faltas=grafico_faltas
+        grafico_faltas=grafico_faltas,
+        alertas=alertas
     )
 
 
