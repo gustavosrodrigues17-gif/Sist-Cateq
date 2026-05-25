@@ -36,12 +36,14 @@
 <header>
     Painel do Administrador
 </header>
+
 <div style="text-align:center; margin-top:10px; font-size:18px;">
 
     👤 Admin logado:
     <strong>{{ session['usuario_nome'] }}</strong>
 
 </div>
+
 <nav>
     <a href="/admin">Home</a>
     <a href="/relatorio">Relatório</a>
@@ -49,6 +51,40 @@
 </nav>
 
 <div class="container">
+
+    <!-- DASHBOARD -->
+    <div class="dashboard">
+
+        <div class="dash-card">
+            <h3>👶 Crianças</h3>
+            <p>{{ total_criancas }}</p>
+        </div>
+
+        <div class="dash-card">
+            <h3>👩 Catequistas</h3>
+            <p>{{ total_catequistas }}</p>
+        </div>
+
+        <div class="dash-card">
+            <h3>📚 Turmas</h3>
+            <p>{{ total_turmas }}</p>
+        </div>
+
+        <div class="dash-card">
+
+            <h3>🏆 Maior Turma</h3>
+
+            {% if turma_maior %}
+
+                <p>{{ turma_maior[0] }}</p>
+
+                <small>{{ turma_maior[1] }} alunos</small>
+
+            {% endif %}
+
+        </div>
+
+    </div>
 
 
     <!-- ADMINS ATIVOS -->
@@ -351,6 +387,53 @@
     </div>
 
 
+    <!-- RANKING DE TURMAS -->
+    <div class="card">
+
+        <h2>📊 Ranking de Turmas</h2>
+
+        {% for turma in ranking_turmas %}
+
+        <div style="margin-bottom:20px;">
+
+            <div style="
+                display:flex;
+                justify-content:space-between;
+                margin-bottom:6px;
+                font-weight:bold;
+            ">
+
+                <span>{{ turma[0] }}</span>
+
+                <span>{{ turma[1] }} alunos</span>
+
+            </div>
+
+            <div style="
+                background:#ecf0f1;
+                border-radius:12px;
+                overflow:hidden;
+                height:30px;
+            ">
+
+                <div style="
+                    width:{{ turma[1] * 15 }}px;
+                    max-width:100%;
+                    height:30px;
+                    background:linear-gradient(135deg,#6c5ce7,#8e7dff);
+                    border-radius:12px;
+                ">
+                </div>
+
+            </div>
+
+        </div>
+
+        {% endfor %}
+
+    </div>
+
+
     <!-- CADASTRAR CRIANÇA -->
     <div class="card">
 
@@ -386,86 +469,87 @@
     </div>
 
 
-<!-- LISTA CRIANÇAS -->
-<div class="card">
+    <!-- LISTA CRIANÇAS -->
+    <div class="card">
 
-    <h2>Crianças Cadastradas</h2>
+        <h2>Crianças Cadastradas</h2>
 
-    <!-- FILTROS -->
-    <div class="filtros">
+        <div class="filtros">
 
-        <input
-            type="text"
-            id="buscarNome"
-            placeholder="🔎 Buscar por nome..."
-        >
+            <input
+                type="text"
+                id="buscarNome"
+                placeholder="🔎 Buscar por nome..."
+            >
 
-        <input
-            type="text"
-            id="buscarTurma"
-            placeholder="👥 Buscar por turma..."
-        >
+            <input
+                type="text"
+                id="buscarTurma"
+                placeholder="👥 Buscar por turma..."
+            >
 
-    </div>
+        </div>
 
-    <div class="table-responsive">
+        <div class="table-responsive">
 
-        <table>
+            <table>
 
-            <thead>
+                <thead>
 
-                <tr>
-                    <th>Nome</th>
-                    <th>Turma</th>
-                    <th>Ações</th>
-                </tr>
+                    <tr>
+                        <th>Nome</th>
+                        <th>Turma</th>
+                        <th>Ações</th>
+                    </tr>
 
-            </thead>
+                </thead>
 
-            <tbody id="tabelaCriancas">
+                <tbody id="tabelaCriancas">
 
-                {% for c in criancas %}
+                    {% for c in criancas %}
 
-                <tr>
+                    <tr>
 
-                    <td class="col-nome">
-                        {{c[1]}}
-                    </td>
+                        <td class="col-nome">
+                            {{c[1]}}
+                        </td>
 
-                    <td class="col-turma">
-                        {{c[2]}}
-                    </td>
+                        <td class="col-turma">
+                            {{c[2]}}
+                        </td>
 
-                    <td>
+                        <td>
 
-                        <div class="acoes">
+                            <div class="acoes">
 
-                            <a
-                                class="icone"
-                                href="/editar_crianca/{{c[0]}}"
-                            >
-                                ✏️
-                            </a>
+                                <a
+                                    class="icone"
+                                    href="/editar_crianca/{{c[0]}}"
+                                >
+                                    ✏️
+                                </a>
 
-                            <a
-                                class="icone"
-                                href="/excluir_crianca/{{c[0]}}"
-                                onclick="return confirm('Tem certeza que deseja excluir?')"
-                            >
-                                ❌
-                            </a>
+                                <a
+                                    class="icone"
+                                    href="/excluir_crianca/{{c[0]}}"
+                                    onclick="return confirm('Tem certeza que deseja excluir?')"
+                                >
+                                    ❌
+                                </a>
 
-                        </div>
+                            </div>
 
-                    </td>
+                        </td>
 
-                </tr>
+                    </tr>
 
-                {% endfor %}
+                    {% endfor %}
 
-            </tbody>
+                </tbody>
 
-        </table>
+            </table>
+
+        </div>
 
     </div>
 
@@ -527,6 +611,6 @@ document
     .addEventListener("keyup", filtrarCriancas)
 
 </script>
-    
+
 </body>
 </html>
