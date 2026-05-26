@@ -1041,5 +1041,106 @@ def excluir_admin(id):
 
     return redirect('/admin')
 
+
+# ✏️ EDITAR CHAMADA
+@app.route('/editar_chamada', methods=['GET', 'POST'])
+def editar_chamada():
+
+    if session.get("tipo") != "catequista":
+        return redirect('/login')
+
+    usuario_id = session['usuario_id']
+
+    conn = conectar()
+    cursor = conn.cursor()
+
+    # TURMAS DA CATEQUISTA
+    cursor.execute("""
+        SELECT turma.id, turma.nome
+        FROM turma
+        INNER JOIN turma_catequista
+        ON turma.id = turma_catequista.turma_id
+        WHERE turma_catequista.catequista_id=%s
+    """, (usuario_id,))
+
+    turmas = cursor.fetchall()
+
+    registros = []
+    data = None
+    turma_id = None
+
+    if request.method == 'POST':
+
+        data = request.form.get('data')
+        turma_id = request.form.get('turma_id')
+
+        # =========================
+        # SALVAR ALTERAÇÕES
+        # =========================
+        if request.form.get("salvar"):
+
+            for key in request.form:
+
+                if key.startswith("status_"):
+
+                    presenca_id = key.split("_")[1]
+
+                    status = request.form.get(key)
+
+                    justificativa = request.form.get(
+                        f"justificativa_{presenca_id}"
+                    )
+
+                    cursor.execute("""
+                        UPDATE presenca
+                        SET status=%s,
+                            justificativa=%s
+                        WHERE id=%s
+                    """, (
+                        status,
+                        justificativa,
+                        presenca_id
+                    ))
+
+            conn.commit()
+
+        # =========================
+        # BUSCAR CHAMADA
+        # =========================
+        cursor.execute("""
+
+            SELECT
+                presenca.id,
+                crianca.nome,
+                presenca.status,
+                presenca.justificativa
+
+            FROM presenca
+
+            INNER JOIN crianca
+            ON presenca.crianca_id = crianca.id
+
+            WHERE crianca.turma_id=%s
+            AND DATE(presenca.data)=DATE(%s)
+
+            ORDER BY crianca.nome
+
+        """, (
+            turma_id,
+            data
+        ))
+
+        registros = cursor.fetchall()
+
+    conn.close()
+
+    return render_template(
+        'editar_chamada.html',
+        turmas=turmas,
+        registros=registros,
+        data=data,
+        turma_id=turma_id
+    )
+
 if __name__ == '__main__':
     app.run(debug=True)
