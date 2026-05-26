@@ -612,5 +612,20 @@ document
 
 </script>
 
+    <script>
+document.addEventListener("DOMContentLoaded", function () {
+    // tira foco automático de qualquer input ao abrir
+    if (document.activeElement) {
+        document.activeElement.blur();
+    }
+
+    // impede navegador de focar sozinho no primeiro input
+    setTimeout(() => {
+        if (document.activeElement) {
+            document.activeElement.blur();
+        }
+    }, 50);
+});
+</script>
 </body>
 </html>
