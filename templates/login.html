@@ -13,10 +13,13 @@
 
     <style>
 
-        body{
-
+        *{
             margin:0;
             padding:0;
+            box-sizing:border-box;
+        }
+
+        body{
 
             min-height:100vh;
 
@@ -25,10 +28,14 @@
             justify-content:center;
             align-items:center;
 
+            padding:20px;
+
+            font-family:'Segoe UI', sans-serif;
+
             background:
             linear-gradient(
-                rgba(0,0,0,0.60),
-                rgba(0,0,0,0.60)
+                rgba(0,0,0,0.65),
+                rgba(0,0,0,0.65)
             ),
 
             url('https://images.unsplash.com/photo-1507692049790-de58290a4334?q=80&w=1974&auto=format&fit=crop');
@@ -36,37 +43,67 @@
             background-size:cover;
             background-position:center;
 
-            font-family:'Segoe UI', sans-serif;
+            overflow:hidden;
+        }
+
+        /* LOGO AO FUNDO */
+
+        .logo-bg{
+
+            position:fixed;
+
+            top:50%;
+            left:50%;
+
+            transform:translate(-50%,-50%);
+
+            z-index:0;
+
+            opacity:0.08;
+        }
+
+        .logo-bg img{
+
+            width:500px;
+
+            max-width:90vw;
+        }
+
+        header,
+        .subtitulo,
+        .container{
+
+            position:relative;
+
+            z-index:2;
         }
 
         header{
 
             background:none !important;
 
+            box-shadow:none !important;
+
             color:white;
 
-            font-size:38px;
+            font-size:42px;
 
-            font-weight:bold;
+            font-weight:700;
 
             text-align:center;
 
-            margin-bottom:25px;
-
-            box-shadow:none !important;
+            margin-bottom:10px;
         }
 
         .subtitulo{
 
             color:rgba(255,255,255,0.85);
 
-            margin-top:-15px;
+            margin-bottom:35px;
 
-            margin-bottom:30px;
+            font-size:17px;
 
             text-align:center;
-
-            font-size:16px;
         }
 
         .container{
@@ -76,11 +113,11 @@
 
             background:rgba(255,255,255,0.12);
 
-            backdrop-filter:blur(12px);
+            backdrop-filter:blur(14px);
 
-            border:1px solid rgba(255,255,255,0.2);
+            border:1px solid rgba(255,255,255,0.18);
 
-            border-radius:28px;
+            border-radius:30px;
 
             padding:40px;
 
@@ -105,13 +142,13 @@
 
         .container h2{
 
-            text-align:center;
-
             color:white;
+
+            text-align:center;
 
             margin-bottom:30px;
 
-            font-size:28px;
+            font-size:30px;
         }
 
         form{
@@ -130,18 +167,27 @@
 
             border-radius:14px;
 
-            background:rgba(255,255,255,0.15);
+            background:rgba(255,255,255,0.92);
 
-            color:white;
+            color:#2c3e50;
 
             font-size:15px;
 
             outline:none;
+
+            transition:0.3s;
+        }
+
+        input:focus{
+
+            transform:scale(1.02);
+
+            box-shadow:0 0 10px rgba(212,175,55,0.5);
         }
 
         input::placeholder{
 
-            color:rgba(255,255,255,0.7);
+            color:#7f8c8d;
         }
 
         button{
@@ -167,26 +213,26 @@
 
         button:hover{
 
-            transform:translateY(-2px);
-
             background:#c59d22;
+
+            transform:translateY(-2px);
         }
 
         .erro{
 
-            background:rgba(231,76,60,0.2);
+            background:rgba(231,76,60,0.18);
 
-            border:1px solid rgba(231,76,60,0.5);
+            border:1px solid rgba(231,76,60,0.4);
 
-            padding:12px;
+            color:white;
 
-            border-radius:12px;
+            padding:14px;
 
-            text-align:center;
+            border-radius:14px;
 
             margin-bottom:20px;
 
-            color:white;
+            text-align:center;
         }
 
         @media(max-width:500px){
@@ -199,6 +245,10 @@
                 padding:30px 25px;
             }
 
+            .container h2{
+                font-size:25px;
+            }
+
         }
 
     </style>
@@ -206,6 +256,13 @@
 </head>
 
 <body>
+
+<!-- LOGO TRANSPARENTE AO FUNDO -->
+<div class="logo-bg">
+
+    <img src="/static/logo.png">
+
+</div>
 
 <header>
     ✨ Paróquia São Lucas
@@ -238,19 +295,19 @@
         <input
             type="email"
             name="email"
-            placeholder="Email"
+            placeholder="Digite seu email"
             required
         >
 
         <input
             type="password"
             name="senha"
-            placeholder="Senha"
+            placeholder="Digite sua senha"
             required
         >
 
-        <button>
-            Entrar
+        <button type="submit">
+            Entrar no Sistema
         </button>
 
     </form>
