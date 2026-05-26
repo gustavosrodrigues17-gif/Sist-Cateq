@@ -32,41 +32,64 @@
 
             font-family:'Segoe UI', sans-serif;
 
+            overflow:hidden;
+
             background:
             linear-gradient(
-                rgba(0,0,0,0.65),
-                rgba(0,0,0,0.65)
-            ),
-
-            url('https://images.unsplash.com/photo-1507692049790-de58290a4334?q=80&w=1974&auto=format&fit=crop');
-
-            background-size:cover;
-            background-position:center;
-
-            overflow:hidden;
+                135deg,
+                #0f2027,
+                #203a43,
+                #2c5364
+            );
         }
 
-        /* LOGO AO FUNDO */
+        /* LOGO NO FUNDO */
 
         .logo-bg{
 
             position:fixed;
 
-            top:50%;
-            left:50%;
+            inset:0;
 
-            transform:translate(-50%,-50%);
+            display:flex;
+
+            justify-content:center;
+
+            align-items:center;
 
             z-index:0;
-
-            opacity:0.08;
         }
 
         .logo-bg img{
 
-            width:500px;
+            width:700px;
 
-            max-width:90vw;
+            max-width:95vw;
+
+            opacity:0.22;
+
+            filter:
+                drop-shadow(
+                    0 0 25px rgba(255,255,255,0.2)
+                );
+
+            animation:flutuar 5s ease-in-out infinite;
+        }
+
+        @keyframes flutuar{
+
+            0%{
+                transform:translateY(0px);
+            }
+
+            50%{
+                transform:translateY(-10px);
+            }
+
+            100%{
+                transform:translateY(0px);
+            }
+
         }
 
         header,
@@ -97,7 +120,7 @@
 
         .subtitulo{
 
-            color:rgba(255,255,255,0.85);
+            color:rgba(255,255,255,0.88);
 
             margin-bottom:35px;
 
@@ -249,6 +272,10 @@
                 font-size:25px;
             }
 
+            .logo-bg img{
+                width:450px;
+            }
+
         }
 
     </style>
@@ -257,7 +284,7 @@
 
 <body>
 
-<!-- LOGO TRANSPARENTE AO FUNDO -->
+<!-- LOGO GRANDE AO FUNDO -->
 <div class="logo-bg">
 
     <img src="/static/logo.png">
