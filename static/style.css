@@ -455,3 +455,9 @@ input[type="text"]#justificativa{
     box-shadow:0 2px 10px rgba(0,0,0,0.1);
     font-size:17px;
 }
+
+
+button, a, input {
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+}
