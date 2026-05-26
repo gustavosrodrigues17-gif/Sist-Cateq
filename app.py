@@ -638,7 +638,7 @@ def relatorio():
         if request.form.get("gerar_pdf"):
 
             html = render_template(
-                'relatorio.html',
+                'relatorio_pdf.html',
                 relatorio_turmas=relatorio_turmas,
                 grafico_faltas=grafico_faltas,
                 alertas=alertas
