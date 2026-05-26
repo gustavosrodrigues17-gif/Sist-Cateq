@@ -1,24 +1,262 @@
 <!DOCTYPE html>
-<html>
+<html lang="pt-br">
+
 <head>
-    <title>Login</title>
-    <link rel="stylesheet" href="/static/style.css">
+
+    <meta charset="UTF-8">
+
+    <title>Paróquia São Lucas</title>
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="/static/style.css">
+
+    <style>
+
+        body{
+
+            margin:0;
+            padding:0;
+
+            min-height:100vh;
+
+            display:flex;
+            flex-direction:column;
+            justify-content:center;
+            align-items:center;
+
+            background:
+            linear-gradient(
+                rgba(0,0,0,0.60),
+                rgba(0,0,0,0.60)
+            ),
+
+            url('https://images.unsplash.com/photo-1507692049790-de58290a4334?q=80&w=1974&auto=format&fit=crop');
+
+            background-size:cover;
+            background-position:center;
+
+            font-family:'Segoe UI', sans-serif;
+        }
+
+        header{
+
+            background:none !important;
+
+            color:white;
+
+            font-size:38px;
+
+            font-weight:bold;
+
+            text-align:center;
+
+            margin-bottom:25px;
+
+            box-shadow:none !important;
+        }
+
+        .subtitulo{
+
+            color:rgba(255,255,255,0.85);
+
+            margin-top:-15px;
+
+            margin-bottom:30px;
+
+            text-align:center;
+
+            font-size:16px;
+        }
+
+        .container{
+
+            width:100%;
+            max-width:420px;
+
+            background:rgba(255,255,255,0.12);
+
+            backdrop-filter:blur(12px);
+
+            border:1px solid rgba(255,255,255,0.2);
+
+            border-radius:28px;
+
+            padding:40px;
+
+            box-shadow:0 8px 40px rgba(0,0,0,0.35);
+
+            animation:fade 0.7s ease;
+        }
+
+        @keyframes fade{
+
+            from{
+                opacity:0;
+                transform:translateY(20px);
+            }
+
+            to{
+                opacity:1;
+                transform:translateY(0);
+            }
+
+        }
+
+        .container h2{
+
+            text-align:center;
+
+            color:white;
+
+            margin-bottom:30px;
+
+            font-size:28px;
+        }
+
+        form{
+
+            display:flex;
+            flex-direction:column;
+
+            gap:18px;
+        }
+
+        input{
+
+            padding:16px;
+
+            border:none;
+
+            border-radius:14px;
+
+            background:rgba(255,255,255,0.15);
+
+            color:white;
+
+            font-size:15px;
+
+            outline:none;
+        }
+
+        input::placeholder{
+
+            color:rgba(255,255,255,0.7);
+        }
+
+        button{
+
+            padding:16px;
+
+            border:none;
+
+            border-radius:14px;
+
+            background:#d4af37;
+
+            color:white;
+
+            font-size:16px;
+
+            font-weight:bold;
+
+            cursor:pointer;
+
+            transition:0.3s;
+        }
+
+        button:hover{
+
+            transform:translateY(-2px);
+
+            background:#c59d22;
+        }
+
+        .erro{
+
+            background:rgba(231,76,60,0.2);
+
+            border:1px solid rgba(231,76,60,0.5);
+
+            padding:12px;
+
+            border-radius:12px;
+
+            text-align:center;
+
+            margin-bottom:20px;
+
+            color:white;
+        }
+
+        @media(max-width:500px){
+
+            header{
+                font-size:30px;
+            }
+
+            .container{
+                padding:30px 25px;
+            }
+
+        }
+
+    </style>
+
 </head>
+
 <body>
 
-<header>Sistema de Catequese</header>
+<header>
+    ✨ Paróquia São Lucas
+</header>
+
+<div class="subtitulo">
+    Sistema de Catequese
+</div>
 
 <div class="container">
+
     <h2>Login</h2>
 
+    {% with messages = get_flashed_messages() %}
+
+        {% if messages %}
+
+            <div class="erro">
+
+                {{ messages[0] }}
+
+            </div>
+
+        {% endif %}
+
+    {% endwith %}
+
     <form action="/autenticar" method="POST">
-        <input type="email" name="email" placeholder="Email" required>
-        <input type="password" name="senha" placeholder="Senha" required>
-        <button>Entrar</button>
+
+        <input
+            type="email"
+            name="email"
+            placeholder="Email"
+            required
+        >
+
+        <input
+            type="password"
+            name="senha"
+            placeholder="Senha"
+            required
+        >
+
+        <button>
+            Entrar
+        </button>
+
     </form>
 
 </div>
 
 </body>
+
 </html>
