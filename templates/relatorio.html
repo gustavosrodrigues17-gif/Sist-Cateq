@@ -26,70 +26,52 @@
 
 <div class="container">
 
-    <!-- GERAR RELATÓRIO -->
-    <div class="card">
-
-        <h2>Gerar Relatório</h2>
-
-        <form method="POST">
-
-            <label>Mês:</label>
-
-            <input
-                type="month"
-                name="mes"
-                required
-            >
-
-            <button type="submit">
-                Gerar
-            </button>
-
-        </form>
-
-    </div>
-    {% if alertas %}
-
+<!-- GERAR RELATÓRIO -->
 <div class="card">
 
-    <h2>⚠️ Alertas de Frequência</h2>
+    <h2>Gerar Relatório</h2>
 
-    {% for alerta in alertas %}
+    <form method="POST">
 
-    <div style="
-        background:#fff3cd;
-        color:#856404;
-        padding:15px;
-        border-radius:12px;
-        margin-bottom:15px;
-        border-left:6px solid #f1c40f;
-    ">
+        <label>Mês:</label>
 
-        <strong>{{ alerta.nome }}</strong>
+        <input
+            type="month"
+            name="mes"
+            required
+        >
 
-        <br>
+        <div style="
+            display:flex;
+            gap:10px;
+            margin-top:15px;
+            flex-wrap:wrap;
+        ">
 
-        Turma:
-        {{ alerta.turma }}
+            <button type="submit">
+                📊 Gerar Relatório
+            </button>
 
-        <br>
+            {% if relatorio_turmas %}
 
-        Frequência:
-        {{ alerta.frequencia }}%
+            <button
+                type="submit"
+                name="gerar_pdf"
+                value="1"
+                style="
+                    background:#c0392b;
+                "
+            >
+                📄 Baixar PDF
+            </button>
 
-        <br>
+            {% endif %}
 
-        Faltas:
-        {{ alerta.faltas }}
+        </div>
 
-    </div>
-
-    {% endfor %}
+    </form>
 
 </div>
-
-{% endif %}
-
 
     <!-- RELATÓRIOS DAS TURMAS -->
     {% for turma in relatorio_turmas %}
