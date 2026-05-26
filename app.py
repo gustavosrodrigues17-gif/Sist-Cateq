@@ -412,6 +412,7 @@ def registrar_presenca():
     conn = conectar()
     cursor = conn.cursor()
 
+    # BUSCA TURMA DA CATEQUISTA
     cursor.execute("""
         SELECT turma.id
         FROM turma
@@ -423,10 +424,44 @@ def registrar_presenca():
     turma = cursor.fetchone()
 
     if not turma:
+        conn.close()
         return redirect('/catequista')
 
     turma_id = turma[0]
 
+    # VERIFICA SE JÁ EXISTE CHAMADA NESSE DIA
+    cursor.execute("""
+
+        SELECT presenca.id
+
+        FROM presenca
+
+        INNER JOIN crianca
+        ON presenca.crianca_id = crianca.id
+
+        WHERE crianca.turma_id=%s
+        AND DATE(presenca.data)=DATE(%s)
+
+    """, (
+        turma_id,
+        data
+    ))
+
+    chamada_existente = cursor.fetchone()
+
+    # BLOQUEIA DUPLICAÇÃO
+    if chamada_existente:
+
+        conn.close()
+
+        return '''
+            <script>
+                alert("A chamada dessa turma já foi registrada nesse dia!");
+                window.location.href="/catequista";
+            </script>
+        '''
+
+    # BUSCA CRIANÇAS
     cursor.execute("""
         SELECT id
         FROM crianca
@@ -435,6 +470,7 @@ def registrar_presenca():
 
     criancas = cursor.fetchall()
 
+    # SALVA PRESENÇAS
     for c in criancas:
 
         crianca_id = c[0]
@@ -443,27 +479,7 @@ def registrar_presenca():
         justificativa = request.form.get(f"justificativa_{crianca_id}")
 
         if status:
-            
-                       # VERIFICA SE JÁ EXISTE PRESENÇA NESSE DIA
-            cursor.execute("""
-            
-                SELECT id
-                FROM presenca
-                WHERE crianca_id=%s
-                AND DATE(data) = DATE(%s)
-            
-            """, (
-                crianca_id,
-                data
-            ))
 
-            presenca_existente = cursor.fetchone()
-
-            # SE JÁ EXISTIR IGNORA
-            if presenca_existente:
-                continue
-
-            # SALVA PRESENÇA
             cursor.execute("""
                 INSERT INTO presenca
                 (crianca_id,data,status,justificativa)
