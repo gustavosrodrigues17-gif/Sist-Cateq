@@ -124,6 +124,33 @@ def admin():
     """)
     turmas = cursor.fetchall()
 
+    cursor.execute("""
+
+    SELECT DISTINCT DATE(presenca.data)
+
+    FROM presenca
+
+    INNER JOIN crianca
+    ON presenca.crianca_id = crianca.id
+
+    INNER JOIN turma
+    ON crianca.turma_id = turma.id
+
+    INNER JOIN turma_catequista
+    ON turma.id = turma_catequista.turma_id
+
+    WHERE turma_catequista.catequista_id=%s
+
+    ORDER BY DATE(presenca.data) DESC
+
+""", (usuario_id,))
+
+datas = cursor.fetchall()
+
+for d in datas:
+
+    datas_chamadas.append(str(d[0]))
+
     # CRIANÇAS
     cursor.execute("""
 
@@ -188,7 +215,8 @@ def admin():
         total_turmas=total_turmas,
         total_catequistas=total_catequistas,
         ranking_turmas=ranking_turmas,
-        turma_maior=turma_maior
+        turma_maior=turma_maior,
+        datas_chamadas=datas_chamadas
     )
 # ➕ CADASTRAR CATEQUISTA
 @app.route('/cadastrar_catequista', methods=['POST'])
@@ -1068,11 +1096,70 @@ def editar_chamada():
     registros = []
     data = None
     turma_id = None
+    datas_chamadas = []
+
+    # PEGAR DIAS QUE JÁ TEM CHAMADA
+    cursor.execute("""
+
+        SELECT DISTINCT DATE(presenca.data)
+
+        FROM presenca
+
+        INNER JOIN crianca
+        ON presenca.crianca_id = crianca.id
+
+        INNER JOIN turma
+        ON crianca.turma_id = turma.id
+
+        INNER JOIN turma_catequista
+        ON turma.id = turma_catequista.turma_id
+
+        WHERE turma_catequista.catequista_id=%s
+
+        ORDER BY DATE(presenca.data) DESC
+
+    """, (usuario_id,))
+
+    datas = cursor.fetchall()
+
+    for d in datas:
+        datas_chamadas.append(str(d[0]))
 
     if request.method == 'POST':
 
         data = request.form.get('data')
         turma_id = request.form.get('turma_id')
+
+        # =========================
+        # EXCLUIR CHAMADA
+        # =========================
+        if request.form.get("excluir_chamada"):
+
+            cursor.execute("""
+
+                DELETE FROM presenca
+
+                USING crianca
+
+                WHERE presenca.crianca_id = crianca.id
+                AND crianca.turma_id=%s
+                AND DATE(presenca.data)=DATE(%s)
+
+            """, (
+                turma_id,
+                data
+            ))
+
+            conn.commit()
+
+            conn.close()
+
+            return '''
+                <script>
+                    alert("Chamada excluída com sucesso!");
+                    window.location.href="/editar_chamada";
+                </script>
+            '''
 
         # =========================
         # SALVAR ALTERAÇÕES
@@ -1139,7 +1226,8 @@ def editar_chamada():
         turmas=turmas,
         registros=registros,
         data=data,
-        turma_id=turma_id
+        turma_id=turma_id,
+        datas_chamadas=datas_chamadas
     )
 
 if __name__ == '__main__':
