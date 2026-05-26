@@ -124,33 +124,6 @@ def admin():
     """)
     turmas = cursor.fetchall()
 
-    cursor.execute("""
-
-    SELECT DISTINCT DATE(presenca.data)
-
-    FROM presenca
-
-    INNER JOIN crianca
-    ON presenca.crianca_id = crianca.id
-
-    INNER JOIN turma
-    ON crianca.turma_id = turma.id
-
-    INNER JOIN turma_catequista
-    ON turma.id = turma_catequista.turma_id
-
-    WHERE turma_catequista.catequista_id=%s
-
-    ORDER BY DATE(presenca.data) DESC
-
-""", (usuario_id,))
-
-datas = cursor.fetchall()
-
-for d in datas:
-
-    datas_chamadas.append(str(d[0]))
-
     # CRIANÇAS
     cursor.execute("""
 
@@ -202,6 +175,22 @@ for d in datas:
 
     if ranking_turmas:
         turma_maior = ranking_turmas[0]
+
+    # DATAS DAS CHAMADAS
+    datas_chamadas = []
+
+    cursor.execute("""
+
+        SELECT DISTINCT DATE(data)
+        FROM presenca
+        ORDER BY DATE(data) DESC
+
+    """)
+
+    datas = cursor.fetchall()
+
+    for d in datas:
+        datas_chamadas.append(str(d[0]))
 
     conn.close()
 
