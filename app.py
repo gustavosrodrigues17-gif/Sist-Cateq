@@ -443,15 +443,15 @@ def registrar_presenca():
         justificativa = request.form.get(f"justificativa_{crianca_id}")
 
         if status:
-
-            # VERIFICA SE JÁ EXISTE PRESENÇA NESSE DIA
+            
+                       # VERIFICA SE JÁ EXISTE PRESENÇA NESSE DIA
             cursor.execute("""
-
+            
                 SELECT id
                 FROM presenca
                 WHERE crianca_id=%s
-                AND data=%s
-
+                AND DATE(data) = DATE(%s)
+            
             """, (
                 crianca_id,
                 data
