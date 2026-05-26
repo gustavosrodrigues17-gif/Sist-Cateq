@@ -1,5 +1,8 @@
 from flask import Flask, render_template, request, redirect, session, flash
 from database import conectar, criar_tabelas
+from flask import make_response
+from xhtml2pdf import pisa
+from io import BytesIO
 
 app = Flask(__name__)
 app.secret_key = "123456"
@@ -573,7 +576,6 @@ def relatorio():
 
                     if r[0] == "Presente":
                         presencas += 1
-
                     else:
                         faltas += 1
 
@@ -587,9 +589,8 @@ def relatorio():
                     1
                 ) if total > 0 else 0
 
-                # ALERTA DE BAIXA FREQUÊNCIA
                 if freq < 50 and total > 0:
-                
+
                     alertas.append({
                         "nome": c[1],
                         "turma": turma_nome,
@@ -612,16 +613,12 @@ def relatorio():
                 "dados": dados_criancas
             })
 
-        # =========================
-        # GRÁFICO DE FALTAS
-        # =========================
-
+        # GRÁFICO
         for turma in relatorio_turmas:
 
             total_faltas = 0
 
             for aluno in turma["dados"]:
-
                 total_faltas += aluno["faltas"]
 
             grafico_faltas.append({
@@ -629,12 +626,40 @@ def relatorio():
                 "faltas": total_faltas
             })
 
-        # ORDENA DA MAIOR PRA MENOR
         grafico_faltas = sorted(
             grafico_faltas,
             key=lambda x: x["faltas"],
             reverse=True
         )
+
+        # =========================
+        # GERAR PDF
+        # =========================
+        if request.form.get("gerar_pdf"):
+
+            html = render_template(
+                'relatorio_pdf.html',
+                relatorio_turmas=relatorio_turmas,
+                grafico_faltas=grafico_faltas,
+                alertas=alertas
+            )
+
+            pdf = BytesIO()
+
+            pisa.CreatePDF(
+                src=html,
+                dest=pdf
+            )
+
+            response = make_response(pdf.getvalue())
+
+            response.headers['Content-Type'] = 'application/pdf'
+
+            response.headers['Content-Disposition'] = (
+                'attachment; filename=relatorio.pdf'
+            )
+
+            return response
 
     conn.close()
 
@@ -644,8 +669,6 @@ def relatorio():
         grafico_faltas=grafico_faltas,
         alertas=alertas
     )
-
-
 # ✏️ EDITAR CRIANÇA
 @app.route('/editar_crianca/<int:id>', methods=['GET', 'POST'])
 def editar_crianca(id):
@@ -1218,6 +1241,7 @@ def editar_chamada():
         turma_id=turma_id,
         datas_chamadas=datas_chamadas
     )
+
 
 if __name__ == '__main__':
     app.run(debug=True)
