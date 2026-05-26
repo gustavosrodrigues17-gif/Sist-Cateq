@@ -9,6 +9,11 @@
 
     <link rel="stylesheet" href="/static/style.css">
 
+    <!-- FLATPICKR -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+
 </head>
 
 <body>
@@ -34,14 +39,15 @@
 
         <form method="POST">
 
-            <label>Data:</label>
+            <label>Data da chamada:</label>
 
             <input
-                type="date"
+                type="text"
                 name="data"
                 id="data"
                 required
                 value="{{ data if data else '' }}"
+                placeholder="Selecione um dia"
             >
 
             <label>Turma:</label>
@@ -188,18 +194,13 @@
 
     let datasChamadas = {{ datas_chamadas|tojson }}
 
-    const campoData = document.getElementById("data")
+    flatpickr("#data", {
 
-    campoData.addEventListener("change", function(){
+        dateFormat: "Y-m-d",
 
-        let dataSelecionada = this.value
+        enable: datasChamadas,
 
-        if(!datasChamadas.includes(dataSelecionada)){
-
-            alert("Nesse dia não existe chamada registrada.")
-
-            this.value = ""
-        }
+        locale: "pt"
 
     })
 
