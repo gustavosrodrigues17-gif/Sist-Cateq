@@ -1,20 +1,13 @@
 <!DOCTYPE html>
 <html lang="pt-br">
-
 <head>
     <meta charset="UTF-8">
-    <title>Dashboard</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crianças</title>
     <link rel="stylesheet" href="/static/style.css">
 </head>
-
 <body>
 
-<header>Painel do Administrador</header>
-
-<div style="text-align:center; margin-top:10px;">
-    👤 Admin: <strong>{{ session['usuario_nome'] }}</strong>
-</div>
+<header>Painel Administrativo</header>
 
 <nav class="menu">
     <a href="/admin">🏠 Home</a>
@@ -29,45 +22,116 @@
 <div class="container">
 
     <div class="card">
-        <h2>🏠 Dashboard</h2>
-    </div>
 
-    <div class="dashboard">
+        <h2>➕ Nova Criança</h2>
 
-        <div class="dash-card">
-            <h3>👶 Crianças</h3>
-            <p>{{ total_criancas }}</p>
-        </div>
+        <form action="/cadastrar_crianca" method="POST">
 
-        <div class="dash-card">
-            <h3>👩 Catequistas</h3>
-            <p>{{ total_catequistas }}</p>
-        </div>
+            <input type="text"
+                   name="nome"
+                   placeholder="Nome da criança"
+                   required>
 
-        <div class="dash-card">
-            <h3>📚 Turmas</h3>
-            <p>{{ total_turmas }}</p>
-        </div>
+            <select name="turma_id" required>
 
-        <div class="dash-card">
-            <h3>🏆 Maior Turma</h3>
-            {% if turma_maior %}
-                <p>{{ turma_maior[0] }}</p>
-                <small>{{ turma_maior[1] }} alunos</small>
-            {% endif %}
-        </div>
+                <option value="">Selecione a turma</option>
+
+                {% for turma in turmas %}
+                <option value="{{ turma[0] }}">
+                    {{ turma[1] }}
+                </option>
+                {% endfor %}
+
+            </select>
+
+            <button type="submit">Cadastrar</button>
+
+        </form>
 
     </div>
 
     <div class="card">
-        <h2>📊 Ranking de Turmas</h2>
 
-        {% for turma in ranking_turmas %}
-        <p>{{ turma[0] }} - {{ turma[1] }} alunos</p>
-        {% endfor %}
+        <h2>👶 Crianças</h2>
+
+        <input type="text"
+               id="filtroNome"
+               placeholder="Filtrar por nome">
+
+        <select id="filtroTurma">
+
+            <option value="">Todas as turmas</option>
+
+            {% for turma in turmas %}
+            <option value="{{ turma[1] }}">
+                {{ turma[1] }}
+            </option>
+            {% endfor %}
+
+        </select>
+
+        <table id="tabelaCriancas">
+
+            <tr>
+                <th>Nome</th>
+                <th>Turma</th>
+                <th>Ações</th>
+            </tr>
+
+            {% for crianca in criancas %}
+            <tr>
+
+                <td>{{ crianca[1] }}</td>
+                <td>{{ crianca[2] }}</td>
+
+                <td>
+                    <a href="/editar_crianca/{{ crianca[0] }}">✏️</a>
+
+                    <a href="/excluir_crianca/{{ crianca[0] }}"
+                       onclick="return confirm('Excluir criança?')">
+                       ❌
+                    </a>
+                </td>
+
+            </tr>
+            {% endfor %}
+
+        </table>
+
     </div>
 
 </div>
+
+<script>
+
+const filtroNome = document.getElementById('filtroNome')
+const filtroTurma = document.getElementById('filtroTurma')
+const linhas = document.querySelectorAll('#tabelaCriancas tr')
+
+function filtrar() {
+
+    const nome = filtroNome.value.toLowerCase()
+    const turma = filtroTurma.value.toLowerCase()
+
+    linhas.forEach((linha, index) => {
+
+        if(index === 0) return
+
+        const nomeLinha = linha.children[0].innerText.toLowerCase()
+        const turmaLinha = linha.children[1].innerText.toLowerCase()
+
+        const mostrarNome = nomeLinha.includes(nome)
+        const mostrarTurma = turmaLinha.includes(turma)
+
+        linha.style.display =
+            mostrarNome && mostrarTurma ? '' : 'none'
+    })
+}
+
+filtroNome.addEventListener('keyup', filtrar)
+filtroTurma.addEventListener('change', filtrar)
+
+</script>
 
 </body>
 </html>
