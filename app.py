@@ -197,19 +197,18 @@ def turmas():
     conn = conectar()
     cursor = conn.cursor()
 
-    # LISTAR TURMAS
     cursor.execute("""
-    SELECT
-        turma.id,
-        turma.nome,
-        GROUP_CONCAT(usuario.nome SEPARATOR ', ')
-    FROM turma
-    LEFT JOIN turma_catequista
-        ON turma.id = turma_catequista.turma_id
-    LEFT JOIN usuario
-        ON usuario.id = turma_catequista.catequista_id
-    GROUP BY turma.id
-    ORDER BY turma.nome
+        SELECT
+            turma.id,
+            turma.nome,
+            STRING_AGG(usuario.nome, ', ') AS catequistas
+        FROM turma
+        LEFT JOIN turma_catequista
+            ON turma.id = turma_catequista.turma_id
+        LEFT JOIN usuario
+            ON usuario.id = turma_catequista.catequista_id
+        GROUP BY turma.id, turma.nome
+        ORDER BY turma.nome
     """)
 
     turmas = cursor.fetchall()
