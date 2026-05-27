@@ -1,4 +1,3 @@
-
 /* =========================
    RESET
 ========================= */
@@ -13,6 +12,10 @@
 /* =========================
    BODY
 ========================= */
+
+html, body{
+    overflow-x:hidden;
+}
 
 body{
     background:#eef2f7;
@@ -208,7 +211,8 @@ table{
     width:100%;
     border-collapse:collapse;
     margin-top:20px;
-    min-width:700px;
+    display:block;
+    overflow-x:auto;
 }
 
 table th{
@@ -223,6 +227,10 @@ table td{
     border-bottom:1px solid #ecf0f1;
     text-align:center;
     background:white;
+}
+
+th, td{
+    white-space:nowrap;
 }
 
 table tr:hover td{
@@ -246,49 +254,6 @@ input[type="text"]#justificativa{
     margin-top:5px;
 }
 
-/* =========================
-   RESPONSIVO
-========================= */
-
-@media(max-width:768px){
-
-    header{
-        font-size:24px;
-        padding:22px;
-    }
-
-    nav{
-        flex-direction:column;
-        align-items:center;
-    }
-
-    nav a{
-        width:90%;
-        text-align:center;
-    }
-
-    .container{
-        width:95%;
-    }
-
-    .card{
-        padding:18px;
-    }
-
-    h2{
-        font-size:22px;
-    }
-
-    table{
-        min-width:600px;
-    }
-
-    input,
-    select,
-    button{
-        font-size:14px;
-    }
-}
 /* =========================
    STATUS PRESENÇA
 ========================= */
@@ -343,20 +308,6 @@ input[type="text"]#justificativa{
     font-weight:600;
 }
 
-/* RESPONSIVO */
-
-@media(max-width:768px){
-
-    .presenca-box{
-        flex-direction:column;
-    }
-
-
-    .botao-status{
-        width:100%;
-    }
-
-}
 /* =========================
    FILTROS
 ========================= */
@@ -456,83 +407,61 @@ input[type="text"]#justificativa{
     font-size:17px;
 }
 
-
-button, a, input {
-    -webkit-tap-highlight-color: transparent;
-    touch-action: manipulation;
+button, a, input{
+    -webkit-tap-highlight-color:transparent;
+    touch-action:manipulation;
 }
 
+/* =========================
+   RESPONSIVO
+========================= */
 
-@media (max-width: 768px) {
+@media(max-width:768px){
 
-    body {
-        padding: 0;
-        margin: 0;
+    header{
+        font-size:24px;
+        padding:22px;
     }
 
-    .container {
-        width: 95%;
-        padding: 10px;
+    nav{
+        flex-direction:column;
+        align-items:center;
     }
 
-    .card {
-        width: 100%;
-        padding: 15px;
-        margin-bottom: 20px;
+    nav a{
+        width:90%;
+        text-align:center;
     }
 
-    table {
-        display: block;
-        overflow-x: auto;
-        width: 100%;
+    .container{
+        width:95%;
     }
 
-    th, td {
-        font-size: 14px;
-        padding: 8px;
-        white-space: nowrap;
+    .card{
+        padding:18px;
+    }
+
+    h2{
+        font-size:22px;
+        text-align:center;
     }
 
     input,
     select,
-    button {
-        width: 100%;
-        font-size: 16px;
-        margin-bottom: 10px;
-        box-sizing: border-box;
+    button{
+        font-size:14px;
     }
 
-    nav.menu {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 8px;
-        justify-content: center;
+    .presenca-box{
+        flex-direction:column;
     }
 
-    nav.menu a {
-        font-size: 14px;
-        padding: 8px 10px;
+    .botao-status{
+        width:100%;
     }
 
-    h1, h2 {
-        font-size: 22px;
-        text-align: center;
+    th, td{
+        font-size:14px;
+        padding:8px;
     }
-
-}
-
-table{
-    width: 100%;
-    display: block;
-    overflow-x: auto;
-}
-
-table{
-    width: 100%;
-    display: block;
-    overflow-x: auto;
-}
-
-th, td{
-    white-space: nowrap;
 }
