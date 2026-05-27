@@ -526,3 +526,13 @@ table{
     display: block;
     overflow-x: auto;
 }
+
+table{
+    width: 100%;
+    display: block;
+    overflow-x: auto;
+}
+
+th, td{
+    white-space: nowrap;
+}
