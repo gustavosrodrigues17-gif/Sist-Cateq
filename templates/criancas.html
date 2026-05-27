@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+
+<body>
+
+<header>Painel do Administrador</header>
+
+<div style="text-align:center; margin-top:10px;">
+    👤 Admin: <strong>{{ session['usuario_nome'] }}</strong>
+</div>
+
+<nav class="menu">
+    <a href="/admin">🏠 Home</a>
+    <a href="/criancas">👶 Crianças</a>
+    <a href="/catequistas">👩 Catequistas</a>
+    <a href="/turmas">📚 Turmas</a>
+    <a href="/admins">🛡️ Admins</a>
+    <a href="/relatorio">📊 Relatório</a>
+    <a href="/deslogar">🚪 Sair</a>
+</nav>
+
+<div class="container">
+
+    <div class="card">
+        <h2>🏠 Dashboard</h2>
+    </div>
+
+    <div class="dashboard">
+
+        <div class="dash-card">
+            <h3>👶 Crianças</h3>
+            <p>{{ total_criancas }}</p>
+        </div>
+
+        <div class="dash-card">
+            <h3>👩 Catequistas</h3>
+            <p>{{ total_catequistas }}</p>
+        </div>
+
+        <div class="dash-card">
+            <h3>📚 Turmas</h3>
+            <p>{{ total_turmas }}</p>
+        </div>
+
+        <div class="dash-card">
+            <h3>🏆 Maior Turma</h3>
+            {% if turma_maior %}
+                <p>{{ turma_maior[0] }}</p>
+                <small>{{ turma_maior[1] }} alunos</small>
+            {% endif %}
+        </div>
+
+    </div>
+
+    <div class="card">
+        <h2>📊 Ranking de Turmas</h2>
+
+        {% for turma in ranking_turmas %}
+        <p>{{ turma[0] }} - {{ turma[1] }} alunos</p>
+        {% endfor %}
+    </div>
+
+</div>
+
+</body>
+</html>

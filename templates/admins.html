@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<title>Admins</title>
+<link rel="stylesheet" href="/static/style.css">
+</head>
+
+<body>
+
+<header>Admins</header>
+
+<nav class="menu">
+<a href="/admin">🏠 Home</a>
+<a href="/criancas">👶 Crianças</a>
+<a href="/catequistas">👩 Catequistas</a>
+<a href="/turmas">📚 Turmas</a>
+<a href="/admins">🛡️ Admins</a>
+<a href="/relatorio">📊 Relatório</a>
+<a href="/deslogar">🚪 Sair</a>
+</nav>
+
+<div class="container">
+
+<div class="card">
+
+<h2>Novo Admin</h2>
+
+<form action="/novo_admin" method="POST">
+
+<input name="nome" placeholder="Nome">
+<input name="email" placeholder="Email">
+<input name="senha" placeholder="Senha">
+
+<button>Salvar</button>
+
+</form>
+
+</div>
+
+<div class="card">
+
+<h2>Lista Admins</h2>
+
+<table>
+
+<tr>
+<th>Nome</th>
+<th>Email</th>
+<th>Ações</th>
+</tr>
+
+{% for a in admins %}
+<tr>
+<td>{{a[1]}}</td>
+<td>{{a[2]}}</td>
+<td>
+
+<a href="/editar_admin/{{a[0]}}">✏️</a>
+<a href="/excluir_admin/{{a[0]}}" onclick="return confirm('Excluir?')">❌</a>
+
+</td>
+</tr>
+{% endfor %}
+
+</table>
+
+</div>
+
+</div>
+
+</body>
+</html>

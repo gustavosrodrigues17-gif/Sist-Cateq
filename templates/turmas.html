@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<title>Turmas</title>
+<link rel="stylesheet" href="/static/style.css">
+</head>
+
+<body>
+
+<header>Turmas</header>
+
+<nav class="menu">
+<a href="/admin">🏠 Home</a>
+<a href="/criancas">👶 Crianças</a>
+<a href="/catequistas">👩 Catequistas</a>
+<a href="/turmas">📚 Turmas</a>
+<a href="/admins">🛡️ Admins</a>
+<a href="/relatorio">📊 Relatório</a>
+<a href="/deslogar">🚪 Sair</a>
+</nav>
+
+<div class="container">
+
+<div class="card">
+
+<h2>Cadastrar Turma</h2>
+
+<form action="/cadastrar_turma" method="POST">
+
+<input name="nome" placeholder="Nome da turma">
+
+<select name="catequista_id" multiple>
+{% for c in catequistas %}
+<option value="{{c[0]}}">{{c[1]}}</option>
+{% endfor %}
+</select>
+
+<button>Salvar</button>
+
+</form>
+
+</div>
+
+<div class="card">
+
+<h2>Lista Turmas</h2>
+
+<table>
+<tr>
+<th>Nome</th>
+<th>Ações</th>
+</tr>
+
+{% for t in turmas %}
+<tr>
+<td>{{t[1]}}</td>
+<td>
+
+<a href="/visualizar_turma/{{t[0]}}">👁️</a>
+<a href="/editar_turma/{{t[0]}}">✏️</a>
+<a href="/excluir_turma/{{t[0]}}" onclick="return confirm('Excluir?')">❌</a>
+
+</td>
+</tr>
+{% endfor %}
+
+</table>
+
+</div>
+
+</div>
+
+</body>
+</html>
