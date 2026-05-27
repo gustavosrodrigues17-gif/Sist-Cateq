@@ -1,20 +1,13 @@
 <!DOCTYPE html>
 <html lang="pt-br">
-
 <head>
     <meta charset="UTF-8">
     <title>Dashboard</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/static/style.css">
 </head>
-
 <body>
 
-<header>Painel do Administrador</header>
-
-<div style="text-align:center; margin-top:10px;">
-    👤 Admin: <strong>{{ session['usuario_nome'] }}</strong>
-</div>
+<header>Painel Administrativo</header>
 
 <nav class="menu">
     <a href="/admin">🏠 Home</a>
@@ -28,43 +21,44 @@
 
 <div class="container">
 
-    <div class="card">
-        <h2>🏠 Dashboard</h2>
-    </div>
+    <div class="cards">
 
-    <div class="dashboard">
-
-        <div class="dash-card">
-            <h3>👶 Crianças</h3>
-            <p>{{ total_criancas }}</p>
+        <div class="card">
+            <h2>{{ total_criancas }}</h2>
+            <p>Crianças</p>
         </div>
 
-        <div class="dash-card">
-            <h3>👩 Catequistas</h3>
-            <p>{{ total_catequistas }}</p>
+        <div class="card">
+            <h2>{{ total_catequistas }}</h2>
+            <p>Catequistas</p>
         </div>
 
-        <div class="dash-card">
-            <h3>📚 Turmas</h3>
-            <p>{{ total_turmas }}</p>
-        </div>
-
-        <div class="dash-card">
-            <h3>🏆 Maior Turma</h3>
-            {% if turma_maior %}
-                <p>{{ turma_maior[0] }}</p>
-                <small>{{ turma_maior[1] }} alunos</small>
-            {% endif %}
+        <div class="card">
+            <h2>{{ total_turmas }}</h2>
+            <p>Turmas</p>
         </div>
 
     </div>
 
     <div class="card">
+
         <h2>📊 Ranking de Turmas</h2>
 
-        {% for turma in ranking_turmas %}
-        <p>{{ turma[0] }} - {{ turma[1] }} alunos</p>
-        {% endfor %}
+        <table>
+            <tr>
+                <th>Turma</th>
+                <th>Quantidade</th>
+            </tr>
+
+            {% for turma in ranking_turmas %}
+            <tr>
+                <td>{{ turma[0] }}</td>
+                <td>{{ turma[1] }}</td>
+            </tr>
+            {% endfor %}
+
+        </table>
+
     </div>
 
 </div>
