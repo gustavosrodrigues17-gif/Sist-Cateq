@@ -3,9 +3,11 @@
 
 <head>
     <meta charset="UTF-8">
+
     <title>Editar Turma</title>
 
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
 
     <link rel="stylesheet" href="/static/style.css">
 </head>
@@ -13,51 +15,79 @@
 <body>
 
 <header>
-    Editar Turma
+    Painel Administrativo
 </header>
 
-<nav>
-    <a href="/admin">Voltar</a>
+<nav class="menu">
+
+    <a href="/admin">🏠 Home</a>
+
+    <a href="/criancas">
+        👶 Crianças
+    </a>
+
+    <a href="/catequistas">
+        👩 Catequistas
+    </a>
+
+    <a href="/turmas">
+        📚 Turmas
+    </a>
+
+    <a href="/admins">
+        🛡️ Admins
+    </a>
+
+    <a href="/relatorio">
+        📊 Relatório
+    </a>
+
+    <a href="/deslogar">
+        🚪 Sair
+    </a>
+
 </nav>
 
 <div class="container">
 
     <div class="card">
 
-        <h2>Editar Dados da Turma</h2>
+        <h2>
+            ✏️ Editar Turma
+        </h2>
 
         <form method="POST">
 
             <input
                 type="text"
                 name="nome"
-                value="{{turma[1]}}"
-                placeholder="Nome da Turma"
+                value="{{ turma[1] }}"
+                placeholder="Nome da turma"
                 required
             >
 
             <label>
-                Catequistas da Turma:
+                Catequistas da turma:
             </label>
 
             <select
                 name="catequista_id"
                 multiple
+                size="5"
                 required
-                style="height: 200px;"
             >
 
                 {% for c in catequistas %}
 
                 <option
-                    value="{{c[0]}}"
+                    value="{{ c[0] }}"
 
                     {% if c[0] in selecionados %}
                         selected
                     {% endif %}
                 >
 
-                    {{c[1]}}
+                    {{ c[1] }}
 
                 </option>
 
