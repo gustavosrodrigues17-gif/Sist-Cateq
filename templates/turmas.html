@@ -1,92 +1,147 @@
 <!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
     <meta charset="UTF-8">
+
     <title>Turmas</title>
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
     <link rel="stylesheet" href="/static/style.css">
 </head>
+
 <body>
 
-<header>Painel Administrativo</header>
+<header>
+    Painel Administrativo
+</header>
 
 <nav class="menu">
+
     <a href="/admin">🏠 Home</a>
-    <a href="/criancas">👶 Crianças</a>
-    <a href="/catequistas">👩 Catequistas</a>
-    <a href="/turmas">📚 Turmas</a>
-    <a href="/admins">🛡️ Admins</a>
-    <a href="/relatorio">📊 Relatório</a>
-    <a href="/deslogar">🚪 Sair</a>
+
+    <a href="/criancas">
+        👶 Crianças
+    </a>
+
+    <a href="/catequistas">
+        👩 Catequistas
+    </a>
+
+    <a href="/turmas">
+        📚 Turmas
+    </a>
+
+    <a href="/admins">
+        🛡️ Admins
+    </a>
+
+    <a href="/relatorio">
+        📊 Relatório
+    </a>
+
+    <a href="/deslogar">
+        🚪 Sair
+    </a>
+
 </nav>
 
 <div class="container">
 
+    <!-- CADASTRAR TURMA -->
     <div class="card">
 
-        <h2>➕ Nova Turma</h2>
+        <h2>
+            ➕ Nova Turma
+        </h2>
 
-        <form action="/cadastrar_turma" method="POST">
+        <form method="POST"
+              action="/cadastrar_turma">
 
-            <input type="text"
-                   name="nome"
-                   placeholder="Nome da turma"
-                   required>
+            <input
+                type="text"
+                name="nome"
+                placeholder="Nome da turma"
+                required
+            >
 
-            <select name="catequista_id"
-                    multiple
-                    size="5">
+            <label>
+                Catequistas:
+            </label>
+
+            <select
+                name="catequista_id"
+                multiple
+                required
+                size="5"
+            >
 
                 {% for c in catequistas %}
-                <option value="{{ c[0] }}">
-                    {{ c[1] }}
+
+                <option value="{{c[0]}}">
+                    {{c[1]}}
                 </option>
+
                 {% endfor %}
 
             </select>
 
-            <button type="submit">Cadastrar</button>
+            <button type="submit">
+                Cadastrar Turma
+            </button>
 
         </form>
 
     </div>
 
+    <!-- LISTA -->
     <div class="card">
 
-        <h2>📚 Turmas</h2>
+        <h2>
+            📚 Turmas Cadastradas
+        </h2>
 
         <table>
 
             <tr>
-                <th>Nome</th>
+                <th>Turma</th>
                 <th>Catequistas</th>
                 <th>Ações</th>
             </tr>
 
             {% for t in turmas %}
+
             <tr>
 
-                <td>{{ t[1] }}</td>
+                <td>{{t[1]}}</td>
 
-                <td>{{ t[2] }}</td>
+                <td>
+                    {{t[2] if t[2] else 'Sem catequista'}}
+                </td>
 
                 <td>
 
-                    <a href="/visualizar_turma/{{ t[0] }}">
-                        👁️
+                    <a href="/visualizar_turma/{{t[0]}}">
+                        👁️ Ver
                     </a>
 
-                    <a href="/editar_turma/{{ t[0] }}">
-                        ✏️
+                    <a href="/editar_turma/{{t[0]}}">
+                        ✏️ Editar
                     </a>
 
-                    <a href="/excluir_turma/{{ t[0] }}"
+                    <a href="/excluir_turma/{{t[0]}}"
                        onclick="return confirm('Excluir turma?')">
-                       ❌
+
+                        ❌ Excluir
+
                     </a>
 
                 </td>
 
             </tr>
+
             {% endfor %}
 
         </table>
