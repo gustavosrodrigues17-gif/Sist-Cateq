@@ -91,7 +91,6 @@ def deslogar():
     return redirect('/login')
 
 
-# 👑 ADMIN
 @app.route('/admin')
 def admin():
 
@@ -101,16 +100,81 @@ def admin():
     conn = conectar()
     cursor = conn.cursor()
 
-    # ADMINS
-    cursor.execute("""
-        SELECT id, nome, email
-        FROM usuario
-        WHERE tipo='admin'
-        ORDER BY nome
-    """)
-    admins = cursor.fetchall()
+    # TOTAL CRIANÇAS
+    cursor.execute("SELECT COUNT(*) FROM crianca")
+    total_criancas = cursor.fetchone()[0]
 
-    # CATEQUISTAS
+    # TOTAL CATEQUISTAS
+    cursor.execute("""
+        SELECT COUNT(*) FROM usuario
+        WHERE tipo='catequista'
+    """)
+    total_catequistas = cursor.fetchone()[0]
+
+    # TOTAL TURMAS
+    cursor.execute("SELECT COUNT(*) FROM turma")
+    total_turmas = cursor.fetchone()[0]
+
+    # RANKING TURMAS
+    cursor.execute("""
+        SELECT turma.nome, COUNT(crianca.id) as total
+        FROM turma
+        LEFT JOIN crianca ON turma.id = crianca.turma_id
+        GROUP BY turma.nome
+        ORDER BY total DESC
+    """)
+    ranking_turmas = cursor.fetchall()
+
+    turma_maior = ranking_turmas[0] if ranking_turmas else None
+
+    conn.close()
+
+    return render_template(
+        'admin.html',
+        total_criancas=total_criancas,
+        total_catequistas=total_catequistas,
+        total_turmas=total_turmas,
+        ranking_turmas=ranking_turmas,
+        turma_maior=turma_maior
+    )
+
+
+@app.route('/criancas')
+def criancas():
+
+    if session.get("tipo") != "admin":
+        return redirect('/login')
+
+    conn = conectar()
+    cursor = conn.cursor()
+
+    cursor.execute("""
+        SELECT crianca.id, crianca.nome, turma.nome
+        FROM crianca
+        JOIN turma ON crianca.turma_id = turma.id
+        ORDER BY crianca.nome
+    """)
+    criancas = cursor.fetchall()
+
+    cursor.execute("SELECT id, nome FROM turma")
+    turmas = cursor.fetchall()
+
+    conn.close()
+
+    return render_template('criancas.html',
+                           criancas=criancas,
+                           turmas=turmas)
+
+
+@app.route('/catequistas')
+def catequistas():
+
+    if session.get("tipo") != "admin":
+        return redirect('/login')
+
+    conn = conectar()
+    cursor = conn.cursor()
+
     cursor.execute("""
         SELECT id, nome, email
         FROM usuario
@@ -119,7 +183,20 @@ def admin():
     """)
     catequistas = cursor.fetchall()
 
-    # TURMAS
+    conn.close()
+
+    return render_template('catequistas.html',
+                           catequistas=catequistas)
+
+@app.route('/turmas')
+def turmas():
+
+    if session.get("tipo") != "admin":
+        return redirect('/login')
+
+    conn = conectar()
+    cursor = conn.cursor()
+
     cursor.execute("""
         SELECT id, nome
         FROM turma
@@ -127,89 +204,33 @@ def admin():
     """)
     turmas = cursor.fetchall()
 
-    # CRIANÇAS
-    cursor.execute("""
+    conn.close()
 
-        SELECT
-            crianca.id,
-            crianca.nome,
-            turma.nome
+    return render_template('turmas.html',
+                           turmas=turmas)
 
-        FROM crianca
+@app.route('/admins')
+def admins():
 
-        JOIN turma
-        ON crianca.turma_id = turma.id
+    if session.get("tipo") != "admin":
+        return redirect('/login')
 
-        ORDER BY crianca.nome
-
-    """)
-
-    criancas = cursor.fetchall()
-
-    # =========================
-    # DASHBOARD
-    # =========================
-
-    total_criancas = len(criancas)
-    total_turmas = len(turmas)
-    total_catequistas = len(catequistas)
-
-    # RANKING DE TURMAS
-    cursor.execute("""
-
-        SELECT
-            turma.nome,
-            COUNT(crianca.id) as total
-
-        FROM turma
-
-        LEFT JOIN crianca
-        ON turma.id = crianca.turma_id
-
-        GROUP BY turma.nome
-
-        ORDER BY total DESC
-
-    """)
-
-    ranking_turmas = cursor.fetchall()
-
-    turma_maior = None
-
-    if ranking_turmas:
-        turma_maior = ranking_turmas[0]
-
-    # DATAS DAS CHAMADAS
-    datas_chamadas = []
+    conn = conectar()
+    cursor = conn.cursor()
 
     cursor.execute("""
-
-        SELECT DISTINCT DATE(data)
-        FROM presenca
-        ORDER BY DATE(data) DESC
-
+        SELECT id, nome, email
+        FROM usuario
+        WHERE tipo='admin'
+        ORDER BY nome
     """)
-
-    datas = cursor.fetchall()
-
-    for d in datas:
-        datas_chamadas.append(str(d[0]))
+    admins = cursor.fetchall()
 
     conn.close()
 
-    return render_template(
-        'admin.html',
-        admins=admins,
-        catequistas=catequistas,
-        turmas=turmas,
-        criancas=criancas,
-        total_criancas=total_criancas,
-        total_turmas=total_turmas,
-        total_catequistas=total_catequistas,
-        ranking_turmas=ranking_turmas,
-        turma_maior=turma_maior,
-        datas_chamadas=datas_chamadas
-    )
+    return render_template('admins.html',
+                           admins=admins)
+
 # ➕ CADASTRAR CATEQUISTA
 @app.route('/cadastrar_catequista', methods=['POST'])
 def cadastrar_catequista():
@@ -230,7 +251,6 @@ def cadastrar_catequista():
     conn.close()
 
     return redirect('/admin')
-
 
 # ✏️ EDITAR CATEQUISTA
 @app.route('/editar_catequista/<int:id>', methods=['GET', 'POST'])
