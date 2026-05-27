@@ -197,17 +197,40 @@ def turmas():
     conn = conectar()
     cursor = conn.cursor()
 
+    # LISTAR TURMAS
+    cursor.execute("""
+    SELECT
+        turma.id,
+        turma.nome,
+        GROUP_CONCAT(usuario.nome SEPARATOR ', ')
+    FROM turma
+    LEFT JOIN turma_catequista
+        ON turma.id = turma_catequista.turma_id
+    LEFT JOIN usuario
+        ON usuario.id = turma_catequista.catequista_id
+    GROUP BY turma.id
+    ORDER BY turma.nome
+    """)
+
+    turmas = cursor.fetchall()
+
+    # LISTAR CATEQUISTAS
     cursor.execute("""
         SELECT id, nome
-        FROM turma
+        FROM usuario
+        WHERE tipo='catequista'
         ORDER BY nome
     """)
-    turmas = cursor.fetchall()
+
+    catequistas = cursor.fetchall()
 
     conn.close()
 
-    return render_template('turmas.html',
-                           turmas=turmas)
+    return render_template(
+        'turmas.html',
+        turmas=turmas,
+        catequistas=catequistas
+    )
 
 @app.route('/admins')
 def admins():
@@ -328,39 +351,46 @@ def excluir_catequista(id):
 @app.route('/cadastrar_turma', methods=['POST'])
 def cadastrar_turma():
 
+    if session.get("tipo") != "admin":
+        return redirect('/login')
+
     nome = request.form.get('nome')
+
     catequistas = request.form.getlist('catequista_id')
 
     conn = conectar()
     cursor = conn.cursor()
 
-    # CRIA TURMA
-    cursor.execute("""
-        INSERT INTO turma (nome)
-        VALUES (%s)
-        RETURNING id
-    """, (nome,))
+    cursor.execute(
+        "INSERT INTO turma (nome) VALUES (%s)",
+        (nome,)
+    )
 
-    turma_id = cursor.fetchone()[0]
+    turma_id = cursor.lastrowid
 
-    # RELACIONA CATEQUISTAS
     for catequista_id in catequistas:
 
-        cursor.execute("""
+        cursor.execute(
+            """
             INSERT INTO turma_catequista
             (turma_id, catequista_id)
             VALUES (%s,%s)
-        """, (turma_id, catequista_id))
+            """,
+            (turma_id, catequista_id)
+        )
 
     conn.commit()
     conn.close()
 
-    return redirect('/admin')
+    return redirect('/turmas')
 
 
 # ➕ CADASTRAR CRIANÇA
 @app.route('/cadastrar_crianca', methods=['POST'])
 def cadastrar_crianca():
+
+    if session.get("tipo") != "admin":
+        return redirect('/login')
 
     conn = conectar()
     cursor = conn.cursor()
@@ -376,12 +406,15 @@ def cadastrar_crianca():
     conn.commit()
     conn.close()
 
-    return redirect('/admin')
+    return redirect('/criancas')
 
 
 # 👩‍🏫 CATEQUISTA
 @app.route('/catequista')
 def catequista():
+
+    if "usuario_id" not in session:
+        return redirect('/login')
 
     usuario_id = session['usuario_id']
 
@@ -396,7 +429,6 @@ def catequista():
     """, (usuario_id,))
 
     catequista_nome = cursor.fetchone()[0]
-
     # TURMAS
     cursor.execute("""
         SELECT turma.id, turma.nome
